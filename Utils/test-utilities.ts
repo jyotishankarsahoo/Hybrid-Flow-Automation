@@ -17,7 +17,7 @@ export const test = base_test.extend<CustomPageFixture>({
     },
 });
 
-export { expect, test as describe };
+export { expect };
 
 // Takes a screenshot of the page if the test has failed.
 async function takeScreenshotIfFailed(page: Page, testInfo: TestInfo) {

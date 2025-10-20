@@ -23,4 +23,11 @@ export class BasePage {
         await expect(locator).toBeEditable();
         await locator.fill(text);
     }
+    protected async assertLocatorHasText(
+        locator: Locator,
+        expectedText: string
+    ): Promise<void> {
+        await expect(locator).toBeVisible();
+        await expect(locator).toHaveText(expectedText);
+    }
 }

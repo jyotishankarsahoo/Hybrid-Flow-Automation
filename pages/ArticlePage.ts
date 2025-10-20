@@ -16,6 +16,9 @@ export class ArticlePage extends BasePage {
     public readonly feedbackSubmitButton = this.locator("#submit-feedback");
     public readonly feedbackConfirmationLabel = this.locator("#rating-done");
 
+    public readonly commentHeader = this.locator("#feedback-label");
+    public readonly doNotIncludeLabel = this.locator(".dont-include-label");
+
     async clickOnThumbsUp() {
         await this.clickElement(this.helpfulYesButton);
     }
@@ -73,5 +76,17 @@ export class ArticlePage extends BasePage {
 
         await expect(this.helpfulYesButton).toHaveText("Yes");
         await expect(this.helpfulNoButton).toHaveText("No");
+    }
+    /**
+     * Verifies the details of the comment section, including headers and labels.
+     */
+    async verifyCommentSectionDetails(
+        expectedHeaderText: string
+    ): Promise<void> {
+        await this.assertLocatorHasText(this.commentHeader, expectedHeaderText);
+        await this.assertLocatorHasText(
+            this.doNotIncludeLabel,
+            "Please don’t include any personal information in your comment."
+        );
     }
 }
