@@ -1,0 +1,19 @@
+{
+  "name": "hybrid-flow-automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tests": "npx playwright test",
+    "test:tag": "npx playwright test --grep @tag-name",
+    "show:report": "npx playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.8.1"
+  }
+}
