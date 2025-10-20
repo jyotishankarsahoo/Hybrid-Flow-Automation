@@ -1,4 +1,4 @@
-import { test, expect } from "../utils/test-utilities";
+import { test } from "../utils/test-utilities";
 
 test.describe("Feedback Submission Flow", () => {
     test.beforeEach(async ({ page }) => {

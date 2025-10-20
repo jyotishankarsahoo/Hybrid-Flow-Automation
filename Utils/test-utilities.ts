@@ -1,7 +1,6 @@
-import { Page, test as base_test, expect, TestInfo } from "@playwright/test";
+import { test as base_test, expect, TestInfo } from "@playwright/test";
 import { ArticlePage } from "../pages/ArticlePage";
-import fs from "fs";
-import path from "path";
+import { takeScreenshotIfFailed } from "./screenshot-helper";
 
 type CustomPageFixture = {
     articlePage: ArticlePage;
@@ -18,22 +17,3 @@ export const test = base_test.extend<CustomPageFixture>({
 });
 
 export { expect };
-
-// Takes a screenshot of the page if the test has failed.
-async function takeScreenshotIfFailed(page: Page, testInfo: TestInfo) {
-    if (testInfo.status !== "failed") return;
-
-    const screenshotDir = path.join(__dirname, "../screenshots");
-    fs.mkdirSync(screenshotDir, { recursive: true });
-
-    const currentDateTime: string = new Date()
-        .toISOString()
-        .replace(/[:T.]/g, "_")
-        .slice(0, -5);
-    const screenshotFileName = `${testInfo.title.replace(
-        /\s+/g,
-        "_"
-    )}_failed_${currentDateTime}.png`;
-    const screenshotPath = path.join(screenshotDir, screenshotFileName);
-    await page.screenshot({ path: screenshotPath, fullPage: true });
-}
