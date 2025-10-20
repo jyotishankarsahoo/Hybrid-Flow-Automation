@@ -38,4 +38,36 @@ export class ArticlePage extends BasePage {
             "Thanks for your feedback."
         );
     }
+    /**
+     * Verifies the visibility, content, and specific text of the main article details.
+     */
+    async verifyArticleDetails(
+        headerText: string,
+        subHeaderText: string
+    ): Promise<void> {
+        await expect(this.articleHeader).toBeVisible();
+        await expect(this.articleSubHeader).toBeVisible();
+        await expect(this.publishDate).toBeVisible();
+
+        await expect(this.articleHeader).not.toBeEmpty();
+        await expect(this.articleSubHeader).not.toBeEmpty();
+        await expect(this.publishDate).not.toBeEmpty();
+
+        await expect(this.articleHeader).toHaveText(headerText);
+        await expect(this.articleSubHeader).toHaveText(subHeaderText);
+        await expect(this.publishDate).toContainText("Published Date:");
+    }
+
+    async verifyInitialFeedbackState(): Promise<void> {
+        await expect(this.helpfulYesButton).toBeVisible();
+        await expect(this.helpfulNoButton).toBeVisible();
+        await expect(this.feedbackSubmitButton).not.toBeVisible();
+        await expect(this.feedbackConfirmationLabel).not.toBeVisible();
+
+        await expect(this.helpfulYesButton).toBeEnabled();
+        await expect(this.helpfulNoButton).toBeEnabled();
+
+        await expect(this.helpfulYesButton).toHaveText("Yes");
+        await expect(this.helpfulNoButton).toHaveText("No");
+    }
 }
