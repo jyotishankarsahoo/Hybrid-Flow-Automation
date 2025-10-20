@@ -1,5 +1,4 @@
-import { ArticlePage } from "../pages/ArticlePage";
-import { test, expect } from "../Utils/test-utilities";
+import { test, expect } from "../utils/test-utilities";
 
 test.describe("Verify Support Article Details", () => {
     test("Verify Header, Subheader and Publish Date are shown", async ({
@@ -122,6 +121,10 @@ test.describe("Verify Support Article Details", () => {
 });
 
 test.describe("Verify Support Article Details using Page Object Model", () => {
+    test.beforeEach(async ({ page }) => {
+        page.goto("102640");
+        await page.waitForLoadState("networkidle");
+    });
     test("Verify Header, Subheader and Publish Date are shown", async ({
         articlePage,
     }) => {

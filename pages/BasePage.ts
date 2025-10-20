@@ -1,22 +1,18 @@
-import { expect } from "../Utils/test-utilities";
+import { expect } from "../utils/test-utilities";
 import { FrameLocator, Locator, Page } from "playwright";
 
 export class BasePage {
-    protected static page: Page;
-    // Static Pattern
-    constructor(page: Page) {
-        BasePage.page = page;
-    }
+    protected readonly page: Page;
 
-    public static setPage(page: Page) {
-        BasePage.page = page;
+    constructor(page: Page) {
+        this.page = page;
     }
 
     protected locator(selector: string): Locator {
-        return BasePage.page.locator(selector);
+        return this.page.locator(selector);
     }
     protected frameLocator(selector: string): FrameLocator {
-        return BasePage.page.frameLocator(selector);
+        return this.page.frameLocator(selector);
     }
     protected async clickElement(locator: Locator): Promise<void> {
         await expect(locator).toBeVisible();
