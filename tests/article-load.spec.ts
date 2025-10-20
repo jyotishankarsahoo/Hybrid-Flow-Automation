@@ -1,3 +1,4 @@
+import { ArticlePage } from "../pages/ArticlePage";
 import { test, expect } from "../Utils/test-utilities";
 
 test.describe("Verify Support Article Details", () => {
@@ -117,5 +118,26 @@ test.describe("Verify Support Article Details", () => {
         await expect(ratingConfirmationLabel).toHaveText(
             "Thanks for your feedback."
         );
+    });
+});
+
+test.describe("Verify Support Article Details using Page Object Model", () => {
+    let articlePage: ArticlePage;
+    test.beforeEach(async ({ page }) => {
+        articlePage = new ArticlePage(page);
+    });
+    test("Verify Header, Subheader and Publish Date are shown", async () => {
+        const ExpectedText = {
+            header: "If your Apple Account is locked, not active, or disabled",
+            subheader:
+                "Learn what to do if you can’t sign in to your Apple Account or Apple services because your account is locked, not active, or disabled.",
+        };
+        await articlePage.verifyArticleDetails(
+            ExpectedText.header,
+            ExpectedText.subheader
+        );
+    });
+    test("Verify Article Feedback Section's initial state and Visibility", async () => {
+        await articlePage.verifyInitialFeedbackState();
     });
 });
