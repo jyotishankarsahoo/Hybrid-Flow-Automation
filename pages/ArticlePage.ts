@@ -31,7 +31,9 @@ export class ArticlePage extends BasePage {
     async submitFeedback() {
         await this.clickElement(this.feedbackSubmitButton);
     }
-
+    /**
+     * Verifies that the feedback submission confirmation label is visible and contains the expected text.
+     */
     async verifyFeedbackSubmissionConfirmation() {
         await expect(this.feedbackConfirmationLabel).toBeVisible();
         await expect(this.feedbackConfirmationLabel).toHaveText(
@@ -57,7 +59,9 @@ export class ArticlePage extends BasePage {
         await expect(this.articleSubHeader).toHaveText(subHeaderText);
         await expect(this.publishDate).toContainText("Published Date:");
     }
-
+    /**
+     * Verifies the initial state of the feedback section elements.
+     */
     async verifyInitialFeedbackState(): Promise<void> {
         await expect(this.helpfulYesButton).toBeVisible();
         await expect(this.helpfulNoButton).toBeVisible();
