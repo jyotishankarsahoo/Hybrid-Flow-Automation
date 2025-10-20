@@ -122,11 +122,9 @@ test.describe("Verify Support Article Details", () => {
 });
 
 test.describe("Verify Support Article Details using Page Object Model", () => {
-    let articlePage: ArticlePage;
-    test.beforeEach(async ({ page }) => {
-        articlePage = new ArticlePage(page);
-    });
-    test("Verify Header, Subheader and Publish Date are shown", async () => {
+    test("Verify Header, Subheader and Publish Date are shown", async ({
+        articlePage,
+    }) => {
         const ExpectedText = {
             header: "If your Apple Account is locked, not active, or disabled",
             subheader:
@@ -137,7 +135,9 @@ test.describe("Verify Support Article Details using Page Object Model", () => {
             ExpectedText.subheader
         );
     });
-    test("Verify Article Feedback Section's initial state and Visibility", async () => {
+    test("Verify Article Feedback Section's initial state and Visibility", async ({
+        articlePage,
+    }) => {
         await articlePage.verifyInitialFeedbackState();
     });
 });
