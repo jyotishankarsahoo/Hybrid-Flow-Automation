@@ -1,4 +1,4 @@
-import { expect } from "../utils/test-utilities";
+import { expect } from "../utilities/test-utilities";
 import { FrameLocator, Locator, Page } from "playwright";
 
 export class BasePage {
