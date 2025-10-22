@@ -9,7 +9,7 @@ interface FeedbackResponsePayload {
     confirmationId: number;
 }
 
-class FeedbackAPIService extends BaseAPIService {
+export class FeedbackAPIService extends BaseAPIService {
     protected readonly endpoint: string = "**/realtimeapi/ratings";
     public assertRequest(
         expectedPayload: FeedbackRequestPayload

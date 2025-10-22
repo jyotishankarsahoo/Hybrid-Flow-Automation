@@ -1,4 +1,4 @@
-import { test } from "../utilities/test-utilities";
+import { test } from "../../utilities/test-utilities";
 
 test.describe("Article Loading Flow", () => {
     test.beforeEach(async ({ page }) => {
