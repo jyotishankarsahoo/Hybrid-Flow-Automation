@@ -8,19 +8,36 @@ export abstract class BaseAPIService {
         this.page = page;
     }
 
-    protected assertRequestPayload(expectedPayload: any): Promise<void> {
+    protected assertRequestPayload(
+        expectedPayload: any,
+        partial: boolean
+    ): Promise<void> {
         let resolveRequest: () => void;
-        const validationPromise = new Promise<void>((resolve) => {
+        let rejectRequest: (reason?: any) => void;
+
+        const validationPromise = new Promise<void>((resolve, reject) => {
             resolveRequest = resolve;
+            rejectRequest = reject;
         });
         this.page.route(this.endpoint, async (route) => {
             try {
-                const actualRequestPayload = route.request().postDataJSON();
-                expect(actualRequestPayload).toEqual(expectedPayload);
+                const actualRequestPayload = await route
+                    .request()
+                    .postDataJSON();
+                if (partial) {
+                    console.log(actualRequestPayload);
+                    console.log(expectedPayload);
+                    expect(actualRequestPayload).toEqual(
+                        expect.objectContaining(expectedPayload)
+                    );
+                } else {
+                    expect(actualRequestPayload).toEqual(expectedPayload);
+                }
                 await route.continue();
                 resolveRequest();
             } catch (error) {
                 route.fulfill({ status: 500 });
+                rejectRequest(error);
             }
         });
         return validationPromise;

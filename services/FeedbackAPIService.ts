@@ -1,20 +1,16 @@
 import { BaseAPIService } from "./BaseAPIService";
-interface FeedbackRequestPayload {
-    rating: number;
-    comments: string | null;
-    articleId: string;
-}
-interface FeedbackResponsePayload {
-    status: "Success" | "Failure";
-    confirmationId: number;
-}
-
+import {
+    FeedbackRequestPayload,
+    FeedbackResponsePayload,
+} from "../utilities/interfaces/FeedbackPayload";
 export class FeedbackAPIService extends BaseAPIService {
     protected readonly endpoint: string = "**/realtimeapi/ratings";
+
     public assertRequest(
-        expectedPayload: FeedbackRequestPayload
+        expectedPayload: FeedbackRequestPayload,
+        partial: boolean
     ): Promise<void> {
-        return this.assertRequestPayload(expectedPayload);
+        return this.assertRequestPayload(expectedPayload, partial);
     }
     public assertResponse(
         expectedPayload: FeedbackResponsePayload
