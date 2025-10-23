@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { FeedbackMockResponseConfig } from "../utilities/interfaces/FeedbackPayload";
 
 export abstract class BaseAPIService {
     protected readonly page: Page;
@@ -111,6 +112,24 @@ export abstract class BaseAPIService {
         });
         return modificationPromise;
     }
+    protected mockErrorResponse(
+        config: FeedbackMockResponseConfig
+    ): Promise<void> {
+        let resolveMock: () => void;
+        const mockPromise = new Promise<void>((resolve) => {
+            resolveMock = resolve;
+        });
+        this.page.route(this.endpoint, async (route) => {
+            route.fulfill({
+                status: config.statusCode,
+                contentType: config.contentType || "application/json",
+                body: JSON.stringify(config.responseBody),
+            });
+            resolveMock();
+        });
+        return mockPromise;
+    }
+    
     public async cleanupRoutes(): Promise<void> {
         await this.page.unrouteAll();
     }

@@ -2,6 +2,7 @@ import { BaseAPIService } from "./BaseAPIService";
 import {
     FeedbackRequestPayload,
     FeedbackResponsePayload,
+    FeedbackMockResponseConfig,
 } from "../utilities/interfaces/FeedbackPayload";
 export class FeedbackAPIService extends BaseAPIService {
     protected readonly endpoint: string = "**/realtimeapi/ratings";
@@ -21,5 +22,8 @@ export class FeedbackAPIService extends BaseAPIService {
         payload: Partial<FeedbackRequestPayload>
     ): Promise<void> {
         return this.modifyRequestPayload(payload);
+    }
+    public mockResponse(config: FeedbackMockResponseConfig): Promise<void> {
+        return this.mockErrorResponse(config);
     }
 }

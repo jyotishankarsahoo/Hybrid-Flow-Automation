@@ -6,3 +6,9 @@ export interface FeedbackRequestPayload {
     contentType?: string;
 }
 export type FeedbackResponsePayload = boolean;
+
+export interface FeedbackMockResponseConfig {
+    statusCode: number;
+    responseBody: any;
+    contentType?: string;
+}
