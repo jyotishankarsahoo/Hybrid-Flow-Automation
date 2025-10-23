@@ -67,7 +67,50 @@ export abstract class BaseAPIService {
         });
         return validationPromise;
     }
+    protected modifyRequestPayload(updatedPayload: any): Promise<void> {
+        let resolveModification: () => void;
+        let rejectModification: (reason?: any) => void;
 
+        const modificationPromise = new Promise<void>((resolve, reject) => {
+            resolveModification = resolve;
+            rejectModification = reject;
+        });
+
+        this.page.route(this.endpoint, async (route) => {
+            try {
+                const modifiedRequest = route.request().postDataJSON();
+                const newRequestPayload = {
+                    ...modifiedRequest,
+                    ...updatedPayload,
+                };
+                // await route.continue({
+                //     postData: JSON.stringify(newRequestPayload),
+                // });
+                const response = await route.fetch({
+                    postData: JSON.stringify(newRequestPayload),
+                });
+
+                // 3. Log and Observe the Response (The new functionality)
+                const status = response.status();
+                // Safely parse response body (using .text() is safer than .json() for simple responses)
+                const responseBodyText = await response.text();
+
+                console.log("--- MODIFIED REQUEST TRANSACTION LOG ---");
+                console.log(
+                    `SENT PAYLOAD: ${JSON.stringify(newRequestPayload)}`
+                );
+                console.log(`RESPONSE URL: ${route.request().url()}`);
+                console.log(`RESPONSE STATUS: ${status}`);
+                console.log(`RESPONSE BODY: ${responseBodyText}`);
+                console.log("----------------------------------------");
+                resolveModification();
+            } catch (error) {
+                route.fulfill({ status: 500 });
+                rejectModification(error);
+            }
+        });
+        return modificationPromise;
+    }
     public async cleanupRoutes(): Promise<void> {
         await this.page.unrouteAll();
     }

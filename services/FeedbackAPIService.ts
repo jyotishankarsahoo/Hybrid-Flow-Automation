@@ -17,4 +17,9 @@ export class FeedbackAPIService extends BaseAPIService {
     ): Promise<void> {
         return this.assertResponsePayload(expectedPayload);
     }
+    public modifyRequest(
+        payload: Partial<FeedbackRequestPayload>
+    ): Promise<void> {
+        return this.modifyRequestPayload(payload);
+    }
 }
