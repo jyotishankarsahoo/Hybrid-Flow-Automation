@@ -18,11 +18,14 @@ export class FeedbackAPIService extends BaseAPIService {
     ): Promise<void> {
         return this.assertResponsePayload(expectedPayload);
     }
+
     public modifyRequest(
-        payload: Partial<FeedbackRequestPayload>
+        payload: Partial<FeedbackRequestPayload>,
+        responsePayload: Partial<FeedbackResponsePayload>
     ): Promise<void> {
-        return this.modifyRequestPayload(payload);
+        return this.modifyRequestAssertResponse(payload, responsePayload);
     }
+
     public mockResponse(config: FeedbackMockResponseConfig): Promise<void> {
         return this.mockErrorResponse(config);
     }

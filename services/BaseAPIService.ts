@@ -68,7 +68,11 @@ export abstract class BaseAPIService {
         });
         return validationPromise;
     }
-    protected modifyRequestPayload(updatedPayload: any): Promise<void> {
+
+    protected modifyRequestAssertResponse(
+        updatedPayload: any,
+        expectedResponse: any
+    ): Promise<void> {
         let resolveModification: () => void;
         let rejectModification: (reason?: any) => void;
 
@@ -79,31 +83,37 @@ export abstract class BaseAPIService {
 
         this.page.route(this.endpoint, async (route) => {
             try {
-                const modifiedRequest = route.request().postDataJSON();
+                const originalPayload = route.request().postDataJSON();
                 const newRequestPayload = {
-                    ...modifiedRequest,
+                    ...(originalPayload || {}),
                     ...updatedPayload,
                 };
-                // await route.continue({
-                //     postData: JSON.stringify(newRequestPayload),
-                // });
                 const response = await route.fetch({
                     postData: JSON.stringify(newRequestPayload),
                 });
 
-                // 3. Log and Observe the Response (The new functionality)
                 const status = response.status();
-                // Safely parse response body (using .text() is safer than .json() for simple responses)
-                const responseBodyText = await response.text();
-
-                console.log("--- MODIFIED REQUEST TRANSACTION LOG ---");
-                console.log(
-                    `SENT PAYLOAD: ${JSON.stringify(newRequestPayload)}`
+                const requestUrl = route.request().url();
+                const actualResponseBody = await response.json();
+                this.logDetails(
+                    newRequestPayload,
+                    requestUrl,
+                    status,
+                    actualResponseBody,
+                    expectedResponse
                 );
-                console.log(`RESPONSE URL: ${route.request().url()}`);
-                console.log(`RESPONSE STATUS: ${status}`);
-                console.log(`RESPONSE BODY: ${responseBodyText}`);
-                console.log("----------------------------------------");
+                if (
+                    typeof expectedResponse === "object" &&
+                    expectedResponse !== null
+                ) {
+                    expect(actualResponseBody).toEqual(
+                        expect.objectContaining(expectedResponse)
+                    );
+                } else {
+                    expect(actualResponseBody).toEqual(expectedResponse);
+                }
+
+                route.fulfill({ response });
                 resolveModification();
             } catch (error) {
                 route.fulfill({ status: 500 });
@@ -112,6 +122,7 @@ export abstract class BaseAPIService {
         });
         return modificationPromise;
     }
+
     protected mockErrorResponse(
         config: FeedbackMockResponseConfig
     ): Promise<void> {
@@ -129,8 +140,28 @@ export abstract class BaseAPIService {
         });
         return mockPromise;
     }
-    
+
     public async cleanupRoutes(): Promise<void> {
         await this.page.unrouteAll();
+    }
+
+    private logDetails(
+        newRequestPayload: any,
+        requestUrl: string,
+        status: number,
+        actualResponseBody: any,
+        expectedResponse: any
+    ) {
+        console.log("--- MODIFIED REQUEST TRANSACTION LOG ---");
+        console.log(`SENT PAYLOAD: ${JSON.stringify(newRequestPayload)}`);
+        console.log(`RESPONSE URL: ${requestUrl}`);
+        console.log(`RESPONSE STATUS: ${status}`);
+        console.log(
+            `ACTUAL RESPONSE BODY: ${JSON.stringify(actualResponseBody)}`
+        );
+        console.log(
+            `EXPECTED RESPONSE BODY: ${JSON.stringify(expectedResponse)}`
+        );
+        console.log("----------------------------------------");
     }
 }
