@@ -55,4 +55,10 @@ test.describe("Feedback Submission Flow", () => {
         await articlePage.submitFeedback();
         await articlePage.verifyFeedbackSubmissionConfirmation();
     });
+    test("Verify Feedback Comment Field Character Limit", async ({ articlePage }) => {
+        await articlePage.clickOnThumbsDown();
+        const longComment = "A".repeat(251);
+        await articlePage.enterFeedbackComment(longComment);
+        await articlePage.isCommentCharacterLimitEnforced();
+    });
 });

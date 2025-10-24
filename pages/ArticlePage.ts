@@ -18,6 +18,7 @@ export class ArticlePage extends BasePage {
 
     public readonly commentHeader = this.locator("#feedback-label");
     public readonly doNotIncludeLabel = this.locator(".dont-include-label");
+    public readonly maxCharacterLimitLabel = this.locator("span.form-message");
 
     async clickOnThumbsUp() {
         await this.clickElement(this.helpfulYesButton);
@@ -30,7 +31,12 @@ export class ArticlePage extends BasePage {
     async enterFeedbackComment(comment: string) {
         await this.fillField(this.feedbackCommentTextArea, comment);
     }
-
+    async isCommentCharacterLimitEnforced() {
+        await this.assertLocatorHasText(
+            this.maxCharacterLimitLabel,
+            "Maximum character limit is 250."
+        );
+    }
     async submitFeedback() {
         await this.clickElement(this.feedbackSubmitButton);
     }
@@ -38,8 +44,8 @@ export class ArticlePage extends BasePage {
      * Verifies that the feedback submission confirmation label is visible and contains the expected text.
      */
     async verifyFeedbackSubmissionConfirmation() {
-        await expect(this.feedbackConfirmationLabel).toBeVisible();
-        await expect(this.feedbackConfirmationLabel).toHaveText(
+        await this.assertLocatorHasText(
+            this.feedbackConfirmationLabel,
             "Thanks for your feedback."
         );
     }
@@ -87,6 +93,10 @@ export class ArticlePage extends BasePage {
         await this.assertLocatorHasText(
             this.doNotIncludeLabel,
             "Please don’t include any personal information in your comment."
+        );
+        await expect(this.feedbackCommentTextArea).toHaveAttribute(
+            "data-max-length",
+            "250"
         );
     }
 }
